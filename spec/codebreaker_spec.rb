@@ -34,7 +34,7 @@ module Codebreaker
     end
 
     describe '.compare_with' do
-      before { game.instance_variable_set(:@secret_code, '1243') }
+      before { game.instance_variable_set(:@secret_code, ['1', '2', '4', '3']) }
       #range = '4321', '5566', '2311', '1146', '4652', '1333', '1111', '1243'
       let(:compare_action) { game.compare_with('1234') }
 
@@ -42,12 +42,7 @@ module Codebreaker
         expect(game).to respond_to(:compare_with)
       end
 
-      it 'set @user_option' do
-        expect{ compare_action }.to change{ game.user_option }
-                                .to (['1', '2', '3', '4'])
-      end
-
-      it 'compare user_option with secret_code', :skip do
+      it 'compare user_option with secret_code' do
         expect(compare_action).to eq '++--'
       end
       #it 'replies according to the marking algorithm'
@@ -61,6 +56,11 @@ module Codebreaker
         compare_action
       end
 
+      it 'call implicit_matches' do
+        expect(game).to receive(:implicit_matches)
+        compare_action
+      end
+
       context 'When user_option doesn`t match the pattern' do
         it 'raise ArgumentError' do
           expect{ game.compare_with('foo') }.to raise_error(ArgumentError)
@@ -68,12 +68,18 @@ module Codebreaker
       end
     end
 
-    describe '.expliсit_matches' do
-
+    describe '.expliсit_matches', :skip do
+      before { game.instance_variable_set(:@user_option, ['1', '2', '3', '4']) }
       it 'able to change user_option' do
-        #game.instance_variable_set(:@secret_code, ['1', '2', '4', '3'])
-        #ame.instance_variable_set(:@user_option, ['1', '2', '3', '4'])
-        #expect(game.user_option).to eq ['+', '+', '3', '4']
+        expect{ game.send(:expliсit_matches) }.to change{ game.user_option }
+                                              .to ['+', '+', '3', '4']
+      end
+    end
+
+    describe '.implicit_matches', :skip do
+      it 'return result' do
+        game.instance_variable_set(:@user_option, ['+', '+', '3', '4'])
+        expect(game.send(:implicit_matches)).to eq '++--'
       end
     end
   end
