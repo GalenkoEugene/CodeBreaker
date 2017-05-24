@@ -29,7 +29,7 @@ module Codebreaker
       end
 
       it 'contain digits from 1..6' do
-        expect(game.instance_variable_get(:@secret_code)).to match /[1-6]{4}/
+        expect(game.instance_variable_get(:@secret_code).join).to match /^[1-6]{4}$/
       end
     end
 
@@ -43,7 +43,8 @@ module Codebreaker
       end
 
       it 'set @user_option' do
-        expect{ compare_action }.to change{ game.user_option }.to ('1234')
+        expect{ compare_action }.to change{ game.user_option }
+                                .to (['1', '2', '3', '4'])
       end
 
       it 'compare user_option with secret_code', :skip do
@@ -69,7 +70,11 @@ module Codebreaker
 
     describe '.expliсit_matches' do
 
-      it 'marking only `+`'
+      it 'able to change user_option' do
+        #game.instance_variable_set(:@secret_code, ['1', '2', '4', '3'])
+        #ame.instance_variable_set(:@user_option, ['1', '2', '3', '4'])
+        #expect(game.user_option).to eq ['+', '+', '3', '4']
+      end
     end
   end
 end
