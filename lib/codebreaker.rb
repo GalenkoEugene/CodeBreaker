@@ -1,14 +1,16 @@
-require "codebreaker/version"
+require 'codebreaker/version'
 
 module Codebreaker
   # CodeBreaker Game
   class Game
-    attr_reader :attempt, :user_option
+    attr_reader :attempts, :user_option
+    ATTEMPTS = 10
 
     def initialize
-      @secret_code, @mutable_secret = [], []
+      @secret_code = []
+      @dup_secret = []
       @user_option = false
-      @attempt = 10
+      @attempts = ATTEMPTS
     end
 
     def start
@@ -18,8 +20,8 @@ module Codebreaker
     def compare_with(user_option)
       @user_option = user_option.chars
       raise ArgumentError, 'Allow digits 1..6' if user_option !~ /^[1-6]{4}$/
-      @attempt-=1
-      expliсit_matches
+      @attempts -= 1
+      explicit_matches
       implicit_matches
     end
 
@@ -30,24 +32,24 @@ module Codebreaker
       4.times { @secret_code << rand(1..6).to_s }
     end
 
-    def expliсit_matches
-      @mutable_secret = @secret_code.dup
-      @mutable_secret.zip(@user_option).each_with_index do |pair, index|
+    def explicit_matches
+      @dup_secret = @secret_code.dup
+      @dup_secret.zip(@user_option).each_with_index do |pair, index|
         next if pair.uniq[1]
         @user_option[index] = '+'
-        @mutable_secret[index] = '+'
+        @dup_secret[index] = '+'
       end
     end
 
     def implicit_matches
-      @mutable_secret.each_index do |secret_i|
-        @user_option.each_index do |user_i|
-          next unless @user_option[user_i] == @mutable_secret[secret_i] &&
-                                              @user_option[user_i] != '+'
-          @user_option[user_i] = '-'
+      @dup_secret.each_index do |dup_s|
+        next if @dup_secret[dup_s] == '+'
+        @user_option.each_index do |user_o|
+          next if @user_option[user_o] != @dup_secret[dup_s]
+          (@user_option[user_o] = '-') && break
         end
       end
-      @user_option.sort.join.gsub(/\b+/, '')
+      @user_option.sort.join.gsub(/\w+/, '')
     end
   end
 end
