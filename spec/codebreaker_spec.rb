@@ -68,16 +68,18 @@ module Codebreaker
       end
     end
 
-    describe '.expliсit_matches', :skip do
-      before { game.instance_variable_set(:@user_option, ['1', '2', '3', '4']) }
+    describe '.expliсit_matches' do
       it 'able to change user_option' do
+        game.instance_variable_set(:@secret_code, ['1', '2', '4', '3'])
+        game.instance_variable_set(:@user_option, ['1', '2', '3', '4'])
         expect{ game.send(:expliсit_matches) }.to change{ game.user_option }
                                               .to ['+', '+', '3', '4']
       end
     end
 
-    describe '.implicit_matches', :skip do
+    describe '.implicit_matches' do
       it 'return result' do
+        game.instance_variable_set(:@mutable_secret, ['+', '+', '4', '3'])
         game.instance_variable_set(:@user_option, ['+', '+', '3', '4'])
         expect(game.send(:implicit_matches)).to eq '++--'
       end
