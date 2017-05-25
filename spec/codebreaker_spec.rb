@@ -57,12 +57,12 @@ module Codebreaker
       end
 
       secret = 1243
-      user_op = %w[4321 5566 2311 1146 4652 1333 1111 1243 2111 5515]
-      result = '----', '', '---', '++', '--', '++', '+', '++++', '--', '-'
+      user_op = %w[4321 5566 6513 1142 4652 1333 1111 1243 2111 5515 1621]
+      result = '----', '', '+-', '++-', '--', '++', '+', '++++', '--', '-', '+-'
 
       user_op.each_with_index do |user_option, index|
-        it 'replies according to the marking algorithm:' \
-            "#{secret} && #{user_option} => #{result[index]}" do
+        it 'replies according to the marking algorithm: ' \
+            "[#{secret}] & [#{user_option}] => '#{result[index]}'" do
           expect(game.compare_with(user_option)).to eq result[index]
         end
       end
@@ -106,7 +106,7 @@ module Codebreaker
     end
 
     describe '.hint' do
-      it 'has ability to call hint' do
+      it 'able to call during the game' do
         expect(game).to respond_to(:hint)
       end
 
