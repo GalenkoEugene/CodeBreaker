@@ -17,9 +17,9 @@ module Codebreaker
       generate_secret_code
     end
 
-    def compare_with(user_option)
-      @user_option = user_option.chars
-      raise ArgumentError, 'Allow digits 1..6' if user_option !~ /^[1-6]{4}$/
+    def compare_with(user_input)
+      raise ArgumentError, 'Allow digit 1..6' if user_input.to_s !~ /^[1-6]{4}$/
+      @user_option = user_input.to_s.chars
       @attempts -= 1
       explicit_matches
       implicit_matches

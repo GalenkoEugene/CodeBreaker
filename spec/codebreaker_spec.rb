@@ -45,10 +45,10 @@ module Codebreaker
         expect(compare_action).to eq '++--'
       end
 
-      user_o = '4321', '5566', '2311', '1146', '4652', '1333', '1111', '1243', '2111', '5515'
-      result = '----', '',     '---',  '++',   '--',   '++',   '+',    '++++', '--',   '-'
+      user_op = 4321, '5566', '2311', '1146', 4652, '1333', '1111', '1243', '2111', '5515'
+      result = '----', '',    '---',  '++',   '--', '++',   '+',    '++++', '--',   '-'
 
-      user_o.each_with_index do |user_option, index|
+      user_op.each_with_index do |user_option, index|
         it "replies according to the marking algorithm:" \
             "#{1243} && #{user_option} => #{result[index]}" do
           expect(game.compare_with(user_option)).to eq result[index]
