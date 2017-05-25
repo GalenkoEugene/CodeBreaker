@@ -24,6 +24,10 @@ module Codebreaker
       implicit_matches
     end
 
+    def hint
+      @secret_code[rand(0..3)]
+    end
+
     private
 
     def generate_secret_code
