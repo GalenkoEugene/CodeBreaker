@@ -19,6 +19,11 @@ module Codebreaker
         game.start
         expect(game.instance_variable_get(:@secret_code)).not_to be_empty
       end
+
+      it 'set amount of attempts' do
+        game.start
+        expect(game.attempts).to eq(10)
+      end
     end
 
     describe '.generate_secret_code' do
@@ -34,7 +39,10 @@ module Codebreaker
     end
 
     describe '.compare_with' do
-      before { game.instance_variable_set(:@secret_code, ['1', '2', '4', '3']) }
+      before do
+        game.start
+        game.instance_variable_set(:@secret_code, ['1', '2', '4', '3'])
+      end
       let(:compare_action) { game.compare_with('1234') }
 
       it 'is present' do
@@ -80,8 +88,8 @@ module Codebreaker
       it 'able to change user_option' do
         game.instance_variable_set(:@secret_code, ['1', '2', '4', '3'])
         game.instance_variable_set(:@user_option, ['1', '2', '3', '4'])
-        expect{ game.send(:explicit_matches) }.to change{ game.user_option }
-                                              .to ['+', '+', '3', '4']
+        expect{ game.send(:explicit_matches) }
+        .to change{ game.instance_variable_get(:@user_option) }                                              .to ['+', '+', '3', '4']
       end
     end
 

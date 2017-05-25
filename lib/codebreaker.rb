@@ -3,18 +3,17 @@ require 'codebreaker/version'
 module Codebreaker
   # CodeBreaker Game
   class Game
-    attr_reader :attempts, :user_option
+    attr_reader :attempts
     ATTEMPTS = 10
 
     def initialize
       @secret_code = []
       @dup_secret = []
-      @user_option = false
-      @attempts = ATTEMPTS
     end
 
     def start
       generate_secret_code
+      @attempts = ATTEMPTS
     end
 
     def compare_with(user_input)
