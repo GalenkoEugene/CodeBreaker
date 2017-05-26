@@ -3,6 +3,7 @@
 module UI
   # Console User Interface
   class UI
+    WIDTH = 35
     class << self
       def name
         puts ' Enter a player name: '
@@ -11,14 +12,14 @@ module UI
         name
       end
 
-      def won(name, counter)
+      def won(name, attempt)
         puts name
-        puts '-- You won! --'
-        puts "From the #{counter} attempts.."
+        puts ' You won! '.center(WIDTH, '=')
+        puts "From the #{Codebreaker::Game::ATTEMPTS - attempt} attempt.."
       end
 
       def lost
-        puts '-- Game Over --'
+        puts ' Game Over '.center(WIDTH, '=')
         puts "Unfortunately you lost..\n"
       end
 
@@ -30,28 +31,30 @@ module UI
         false
       end
 
-      def capture_guess
-        puts " Enter your option, it must be\n four digits from 1 to 6"
+      def capture_guess(game)
+        puts "(#{game.attempts}/#{Codebreaker::Game::ATTEMPTS}) " \
+          'Type 4 digits from 1 to 6'
         gets.chomp
       end
 
       def help
-        width = 33
-        puts ' About Game '.center(width, '=')
-        puts 'Codebreaker is a logic game'.center(width)
-        puts 'in which a code-breaker is "you"'.center(width)
-        puts 'tries to break a secret code'.center(width)
-        puts 'created by a code-maker "game".'.center(width)
-        puts 'If you need help, type:'.center(width)
-        puts '`hint`, `help` or just `h`'.center(width)
-        puts 'Good luck'.center(width)
-        puts ' About Game '.center(width, '=')
+        puts ' About Game '.center(WIDTH, '=')
+        rows = 'Codebreaker is a logic game', 'in which "you"',
+          'tries to break a secret code', 'created by a code-maker "game".',
+          'If you need help, type:', '`hint` `help` or just `h`', 'Good luck'
+        rows.each { |row| puts row.center(WIDTH) }
+        puts ' About Game '.center(WIDTH, '=')
       end
 
       def save?
         puts 'Save your score?'
         return true if ['', 'y', 'yes'].include?(gets.chomp)
         false
+      end
+
+      def start
+        puts "\nNew game was started..."
+        puts 'Secret code successfully generated!'
       end
     end
   end
