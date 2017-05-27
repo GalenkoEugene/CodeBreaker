@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require_relative 'codebreaker/version'
+require 'yaml/store'
 module Codebreaker
   # CodeBreaker Game
   class Game
     attr_reader :attempts
     ATTEMPTS = 10
+    PATH_TO_DATA = './data.yaml'
+    NST = Struct.new(:name, :score, :time)
 
     def initialize
       @secret_code = []
@@ -29,6 +32,13 @@ module Codebreaker
       @secret_code[rand(0..3)]
     end
 
+    def save(name = 'No name')
+      raise 'Game is unfinished' if chance?
+      @data = YAML.load_file(PATH_TO_DATA) if File.exist?(PATH_TO_DATA)
+      @data ? @data << form_data(name) : @data = [form_data(name)]
+      File.open(PATH_TO_DATA, 'w') { |file| file.write(@data.to_yaml) }
+    end
+
     private
 
     def generate_secret_code
@@ -40,8 +50,7 @@ module Codebreaker
       @dup_secret = @secret_code.dup
       @dup_secret.zip(@user_option).each_with_index do |pair, index|
         next if pair.uniq[1]
-        @user_option[index] = '+'
-        @dup_secret[index] = '+'
+        @user_option[index], @dup_secret[index] = '+', '+'
       end
     end
 
@@ -54,6 +63,20 @@ module Codebreaker
         end
       end
       @user_option.sort.join.gsub(/\w+/, '')
+    end
+
+    def chance?
+      @user_option != '++++' && @attempts.positive?
+    end
+
+    def form_data(name)
+      score = generate_score.to_i
+      NST.new(name, score, Time.now)
+    end
+
+    def generate_score
+      return 0 if @user_option != '++++' && @attempts.zero?
+      %w[21 34 55 89 144 233 377 610 987 1597].at @attempts
     end
   end
 end

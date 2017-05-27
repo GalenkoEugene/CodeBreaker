@@ -116,5 +116,62 @@ module Codebreaker
         expect(game.instance_variable_get(:@secret_code)).to include(hint)
       end
     end
+
+    describe '.save' do
+      before do
+        Game.instance_eval { remove_const('PATH_TO_DATA') }
+        Game.const_set('PATH_TO_DATA', './test_data.yaml')
+        game.instance_variable_set(:@user_option, '++++')
+        game.instance_variable_set(:@attempts, 7)
+      end
+      let(:name) { 'Jimmy' }
+      let(:zero_attempts) { game.instance_variable_set(:@attempts, 0) }
+      let(:looser_option) { game.instance_variable_set(:@user_option, '--') }
+
+      context 'game isn`t finished' do
+        it 'raise exception' do
+          looser_option
+          expect { game.save(name) }.to raise_exception('Game is unfinished')
+        end
+      end
+
+      context 'attempts is runs out' do
+        before { allow(game).to receive(:form_data) }
+
+        it 'Does not raise an exception' do
+          looser_option
+          zero_attempts
+          expect { game.save(name) }.not_to raise_exception
+        end
+
+        it 'Does not raise an exception' do
+          expect { game.save(name) }.not_to raise_exception
+        end
+      end
+
+      it 'game.save, call #form_data' do
+        expect(game).to receive(:form_data).with(String)
+        game.save(name)
+      end
+
+      describe '#form_data' do
+        it 'generate score accordind to the remaining attempts' do
+          zero_attempts
+          expect(game.send(:generate_score)).to eq '21'
+        end
+
+        describe '#generate_score' do
+          it 'generate accordind to the remaining attempts' do
+            looser_option
+            zero_attempts
+            expect(game.send(:generate_score)).to eq 0
+          end
+        end
+
+        it 'format data before save to file' do
+          expect(game.send(:form_data, name)).to be_a Struct
+        end
+      end
+    end
   end
 end

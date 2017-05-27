@@ -22,7 +22,7 @@ module UI
     end
 
     result == '++++' ? UI.won(@name, game.attempts) : UI.lost
-    # game.save_score(@name) if UI.save?
+    game.save(@name) if UI.save?
     break unless UI.repeat_game?
   end
   puts ' CodeBreaker '.center(35, '=')

@@ -27,8 +27,7 @@ module UI
         puts 'Do you want to repeat the game?'
         puts "Please type 'yes' or just click 'Enter' "\
              'if you want to start a new game, otherwise type something else:'
-        return true if ['', 'y', 'yes'].include?(gets.chomp)
-        false
+        yes?
       end
 
       def capture_guess(game)
@@ -47,14 +46,20 @@ module UI
       end
 
       def save?
-        puts 'Save your score?'
-        return true if ['', 'y', 'yes'].include?(gets.chomp)
-        false
+        puts 'Save your score? [y/yes/Enter]'
+        yes?
       end
 
       def start
         puts "\nNew game was started..."
         puts 'Secret code successfully generated!'
+      end
+
+      private
+
+      def yes?
+        return true if ['', 'y', 'yes'].include?(gets.chomp)
+        false
       end
     end
   end
