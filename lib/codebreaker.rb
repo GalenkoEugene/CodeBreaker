@@ -71,7 +71,7 @@ module Codebreaker
 
     def form_data(name)
       score = generate_score.to_i
-      NST.new(name, score, Time.now)
+      NST.new(name, score, Time.now.strftime('%F %T'))
     end
 
     def generate_score

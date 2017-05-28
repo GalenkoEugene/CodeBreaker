@@ -55,6 +55,11 @@ module UI
         puts 'Secret code successfully generated!'
       end
 
+      def bye
+        puts ' Goodbye '.center(WIDTH)
+        puts ' CodeBreaker '.center(WIDTH, '=')
+      end
+
       private
 
       def yes?

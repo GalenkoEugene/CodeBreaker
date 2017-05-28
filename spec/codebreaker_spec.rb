@@ -127,6 +127,7 @@ module Codebreaker
       let(:name) { 'Jimmy' }
       let(:zero_attempts) { game.instance_variable_set(:@attempts, 0) }
       let(:looser_option) { game.instance_variable_set(:@user_option, '--') }
+      after(:all) { File.delete './test_data.yaml' }
 
       context 'game isn`t finished' do
         it 'raise exception' do

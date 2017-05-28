@@ -18,12 +18,12 @@ module UI
       p game.hint if %w[h help hint].include? user_option
       next if user_option !~ /^[1-6]{4}$/
       p result = game.compare_with(user_option)
-      break if game.attempts <= 0 || result == '++++'
+      break if game.attempts.zero? || result == '++++'
     end
 
     result == '++++' ? UI.won(@name, game.attempts) : UI.lost
     game.save(@name) if UI.save?
     break unless UI.repeat_game?
   end
-  puts ' CodeBreaker '.center(35, '=')
+  UI.bye
 end
