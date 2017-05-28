@@ -26,4 +26,5 @@ module UI
     break unless UI.repeat_game?
   end
   UI.bye
+  UI.show(game.score)
 end

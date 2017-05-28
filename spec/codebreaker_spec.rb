@@ -6,6 +6,11 @@ require 'spec_helper'
 module Codebreaker
   RSpec.describe Game do
     let(:game) { Game.new }
+    before (:all) do
+      Game.instance_eval { remove_const('PATH_TO_DATA') }
+      Game.const_set('PATH_TO_DATA', './test_data.yaml')
+    end
+    after(:all) { File.delete './test_data.yaml' }
 
     describe '.start' do
       it 'has instance variable @secret_code' do
@@ -119,15 +124,12 @@ module Codebreaker
 
     describe '.save' do
       before do
-        Game.instance_eval { remove_const('PATH_TO_DATA') }
-        Game.const_set('PATH_TO_DATA', './test_data.yaml')
         game.instance_variable_set(:@result, '++++')
         game.instance_variable_set(:@attempts, 7)
       end
       let(:name) { 'Jimmy' }
       let(:zero_attempts) { game.instance_variable_set(:@attempts, 0) }
       let(:looser_option) { game.instance_variable_set(:@result, '--') }
-      after(:all) { File.delete './test_data.yaml' }
 
       context 'game isn`t finished' do
         it 'raise exception' do
@@ -173,10 +175,6 @@ module Codebreaker
           expect(game.send(:form_data, name)).to be_a Struct
         end
       end
-    end
-
-    describe '#score' do
-      it 'show score of all games '
     end
   end
 end

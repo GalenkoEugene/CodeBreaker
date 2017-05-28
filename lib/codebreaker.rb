@@ -40,8 +40,8 @@ module Codebreaker
       File.open(PATH_TO_DATA, 'w') { |file| file.write(@data.to_yaml) }
     end
 
-    def self.score
-      load_file
+    def score
+      load_file.sort_by(&:score).reverse
     end
 
     private

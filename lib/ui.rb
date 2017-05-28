@@ -3,7 +3,7 @@
 module UI
   # Console User Interface
   class UI
-    WIDTH = 35
+    WIDTH = 47
     class << self
       def name
         puts ' Enter a player name: '
@@ -24,9 +24,7 @@ module UI
       end
 
       def repeat_game?
-        puts 'Do you want to repeat the game?'
-        puts "Please type 'yes' or just click 'Enter' "\
-             'if you want to start a new game, otherwise type something else:'
+        puts 'Do you want to repeat the game? [y/yes/Enter]'
         yes?
       end
 
@@ -39,7 +37,7 @@ module UI
       def help
         puts ' About Game '.center(WIDTH, '=')
         rows = 'Codebreaker is a logic game', 'in which "you"',
-          'tries to break a secret code', 'created by a code-maker "game".',
+          'try to break a secret code', 'created by a code-maker "game".',
           'If you need help, type:', '`hint` `help` or just `h`', 'Good luck'
         rows.each { |row| puts row.center(WIDTH) }
         puts ' About Game '.center(WIDTH, '=')
@@ -58,6 +56,15 @@ module UI
       def bye
         puts ' Goodbye '.center(WIDTH)
         puts ' CodeBreaker '.center(WIDTH, '=')
+      end
+
+      def show(scores)
+        puts 'Results:'.center(WIDTH)
+        format = '%-3s %-14s %-8s %-20s'
+        puts format % ['#', 'User:', 'Score:', 'Date and Time:']
+        scores.each_with_index do |player, i|
+          puts format % [ i+1, player.name, player.score, player.time ]
+        end
       end
 
       private
