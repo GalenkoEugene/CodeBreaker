@@ -13,6 +13,7 @@ module Codebreaker
     def initialize
       @secret_code = []
       @dup_secret = []
+      @result = ''
     end
 
     def start
@@ -34,9 +35,13 @@ module Codebreaker
 
     def save(name = 'No name')
       raise 'Game is unfinished' if chance?
-      @data = YAML.load_file(PATH_TO_DATA) if File.exist?(PATH_TO_DATA)
+      @data = load_file
       @data ? @data << form_data(name) : @data = [form_data(name)]
       File.open(PATH_TO_DATA, 'w') { |file| file.write(@data.to_yaml) }
+    end
+
+    def self.score
+      load_file
     end
 
     private
@@ -62,11 +67,11 @@ module Codebreaker
           (@user_option[user_o] = '-') && break
         end
       end
-      @user_option.sort.join.gsub(/\w+/, '')
+      @result = @user_option.sort.join.gsub(/\w+/, '')
     end
 
     def chance?
-      @user_option != '++++' && @attempts.positive?
+      @result != '++++' && @attempts.positive?
     end
 
     def form_data(name)
@@ -75,8 +80,12 @@ module Codebreaker
     end
 
     def generate_score
-      return 0 if @user_option != '++++' && @attempts.zero?
+      return 0 if @result != '++++' && @attempts.zero?
       %w[21 34 55 89 144 233 377 610 987 1597].at @attempts
+    end
+
+    def load_file
+      YAML.load_file(PATH_TO_DATA) if File.exist?(PATH_TO_DATA)
     end
   end
 end
