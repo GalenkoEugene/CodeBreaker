@@ -1,3 +1,4 @@
+[![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/GalenkoNeon/CodeBreaker/blob/master/LICENSE.txt)
 [![Build Status](https://travis-ci.org/GalenkoNeon/CodeBreaker.svg?branch=dev)](https://travis-ci.org/GalenkoNeon/CodeBreaker)
 # Codebreaker
 
@@ -30,7 +31,36 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require_relative 'codebreaker'
+require_relative 'codebreaker/ui'
+# UI for testing CogeBreaker module
+module UI
+  game = Codebreaker::Game.new
+  result = ''
+  @name = false
+  UI.help
+
+  loop do
+    @name = UI.name unless @name
+    UI.start if game.start
+
+    loop do
+      user_option = UI.capture_guess(game)
+      p game.hint if %w[h help hint].include? user_option
+      next if user_option !~ /^[1-6]{4}$/
+      p result = game.compare_with(user_option)
+      break if game.attempts.zero? || result == '++++'
+    end
+
+    result == '++++' ? UI.won(@name, game.attempts) : UI.lost
+    game.save(@name) if UI.save?
+    break unless UI.repeat_game?
+  end
+  UI.bye
+  UI.show(game.score)
+end
+```
 
 ## Development
 
@@ -46,4 +76,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Galenk
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
