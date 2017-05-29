@@ -36,9 +36,11 @@ module UI
 
       def help
         puts ' About Game '.center(WIDTH, '=')
-        rows = 'Codebreaker is a logic game', 'in which "you"',
+        rows = [
+          'Codebreaker is a logic game', 'in which "you"',
           'try to break a secret code', 'created by a code-maker "game".',
-          'If you need help, type:', '`hint` `help` or just `h`', 'Good luck'
+          'If you need help, type:', '[h/hint/help]', 'Good luck'
+        ]
         rows.each { |row| puts row.center(WIDTH) }
         puts ' About Game '.center(WIDTH, '=')
       end
@@ -63,7 +65,7 @@ module UI
         format = '%-3s %-14s %-8s %-20s'
         puts format % ['#', 'User:', 'Score:', 'Date and Time:']
         scores.each_with_index do |player, i|
-          puts format % [ i+1, player.name, player.score, player.time ]
+          puts format % [i + 1, player.name, player.score, player.time]
         end
       end
 

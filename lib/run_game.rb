@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'codebreaker'
-require_relative 'ui'
+require_relative 'codebreaker/ui'
 # UI for testing CogeBreaker module
 module UI
   game = Codebreaker::Game.new
