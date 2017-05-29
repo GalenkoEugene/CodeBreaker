@@ -34,7 +34,7 @@ Or install it yourself as:
 ```ruby
 require_relative 'codebreaker'
 require_relative 'codebreaker/ui'
-# UI for testing CogeBreaker module
+# User Interface for testing CogeBreaker module
 module UI
   game = Codebreaker::Game.new
   result = ''
@@ -61,6 +61,8 @@ module UI
   UI.show(game.score)
 end
 ```
+  ![Alt text](https://snag.gy/BnFZNX.jpg 'example of data.yaml')
+  ![Alt text](https://snag.gy/8gX25p.jpg 'Read from file..')
 
 ## Development
 
