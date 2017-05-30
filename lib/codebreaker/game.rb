@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'yaml/store'
 module Codebreaker
   # CodeBreaker Game
@@ -24,6 +22,7 @@ module Codebreaker
       raise ArgumentError, 'Allow digit 1..6' if user_input.to_s !~ /^[1-6]{4}$/
       @user_option = user_input.to_s.chars
       @attempts -= 1
+      @result.clear
       explicit_matches
       implicit_matches
     end
@@ -51,22 +50,21 @@ module Codebreaker
     end
 
     def explicit_matches
-      @dup_secret = @secret_code.dup
-      @dup_secret.zip(@user_option).each_with_index do |pair, index|
-        next if pair.uniq[1]
-        @user_option[index], @dup_secret[index] = '+', '+'
+      clean = [@secret_code, @user_option].transpose.reject do |pair|
+        @result << '+' if pair.uniq.one?
       end
+      @dup_secret, @user_option = clean.transpose
     end
 
     def implicit_matches
+      return '++++' if @result == '++++'
       @dup_secret.each_index do |dup_s|
-        next if @dup_secret[dup_s] == '+'
         @user_option.each_index do |user_o|
           next if @user_option[user_o] != @dup_secret[dup_s]
           (@user_option[user_o] = '-') && break
         end
       end
-      @result = @user_option.sort.join.gsub(/\w+/, '')
+      @result << @user_option.sort.join.gsub(/\w+/, '')
     end
 
     def chance?
