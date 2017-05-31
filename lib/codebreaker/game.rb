@@ -1,10 +1,11 @@
 require 'yaml/store'
+
 module Codebreaker
   # CodeBreaker Game
   class Game
     attr_reader :attempts
     ATTEMPTS = 10
-    PATH_TO_DATA = './data.yaml'
+    PATH_TO_DATA = './data.yaml'.freeze
     NST = Struct.new(:name, :score, :time)
 
     def initialize
@@ -23,8 +24,7 @@ module Codebreaker
       @user_option = user_input.to_s.chars
       @attempts -= 1
       @result.clear
-      explicit_matches
-      implicit_matches
+      compare
     end
 
     def hint
@@ -49,22 +49,12 @@ module Codebreaker
       4.times { @secret_code << rand(1..6).to_s }
     end
 
-    def explicit_matches
+    def compare
       clean = [@secret_code, @user_option].transpose.reject do |pair|
         @result << '+' if pair.uniq.one?
       end
-      @dup_secret, @user_option = clean.transpose
-    end
-
-    def implicit_matches
-      return '++++' if @result == '++++'
-      @dup_secret.each_index do |dup_s|
-        @user_option.each_index do |user_o|
-          next if @user_option[user_o] != @dup_secret[dup_s]
-          (@user_option[user_o] = '-') && break
-        end
-      end
-      @result << @user_option.sort.join.gsub(/\w+/, '')
+      clean.each { |pair| @result << '-' if clean.rassoc(pair[0])&[1].clear }
+      @result
     end
 
     def chance?

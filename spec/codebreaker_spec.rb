@@ -61,13 +61,13 @@ module Codebreaker
         expect(compare_action).to eq '++--'
       end
 
-      secret = 1243
+      #secret = 1243
       user_op = %w[4321 5566 6513 1142 4652 1333 1111 1243 2111 5515 1621]
       result = '----', '', '+-', '++-', '--', '++', '+', '++++', '--', '-', '+-'
 
       user_op.each_with_index do |user_option, index|
         it 'replies according to the marking algorithm: ' \
-            "[#{secret}] & [#{user_option}] => '#{result[index]}'" do
+            "[1243] & [#{user_option}] => '#{result[index]}'" do
           expect(game.compare_with(user_option)).to eq result[index]
         end
       end
@@ -76,13 +76,8 @@ module Codebreaker
         expect { compare_action }.to change { game.attempts }.from(10).to(9)
       end
 
-      it 'call explicit_matches' do
-        expect(game).to receive(:explicit_matches)
-        compare_action
-      end
-
-      it 'call implicit_matches' do
-        expect(game).to receive(:implicit_matches)
+      it 'call compare' do
+        expect(game).to receive(:compare)
         compare_action
       end
 
@@ -90,23 +85,6 @@ module Codebreaker
         it 'raise ArgumentError' do
           expect { game.compare_with('foo') }.to raise_error(ArgumentError)
         end
-      end
-    end
-
-    describe '.expliсit_matches' do
-      it 'able to change user_option' do
-        game.instance_variable_set(:@secret_code, %w[1 2 4 3])
-        game.instance_variable_set(:@user_option, %w[1 2 3 4])
-        expect { game.send(:explicit_matches) }
-          .to change { game.instance_variable_get :@user_option }.to %w[+ + 3 4]
-      end
-    end
-
-    describe '.implicit_matches' do
-      it 'return result' do
-        game.instance_variable_set(:@dup_secret, %w[+ + 4 3])
-        game.instance_variable_set(:@user_option, %w[+ + 3 4])
-        expect(game.send(:implicit_matches)).to eq '++--'
       end
     end
 
