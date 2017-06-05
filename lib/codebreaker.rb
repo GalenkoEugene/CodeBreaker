@@ -1,5 +1,4 @@
-require "codebreaker/version"
+# frozen_string_literal: true
 
-module Codebreaker
-  # Your code goes here...
-end
+require_relative 'codebreaker/version'
+require_relative 'codebreaker/game'
