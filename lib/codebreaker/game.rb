@@ -10,7 +10,6 @@ module Codebreaker
 
     def initialize
       @secret_code = []
-      @dup_secret = []
       @result = ''
     end
 
@@ -50,10 +49,10 @@ module Codebreaker
     end
 
     def compare
-      clean = [@secret_code, @user_option].transpose.reject do |pair|
+      aid = [@user_option, @secret_code].transpose.reject do |pair|
         @result << '+' if pair.uniq.one?
       end
-      clean.each { |pair| @result << '-' if clean.rassoc(pair[0])&[1].clear }
+      aid.each { |pair| @result << '-' if aid.assoc(pair.last)&[0].clear }
       @result
     end
 
