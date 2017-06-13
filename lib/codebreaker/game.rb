@@ -11,6 +11,7 @@ module Codebreaker
     def initialize
       @secret_code = []
       @result = ''
+      @aid = []
     end
 
     def start
@@ -22,8 +23,8 @@ module Codebreaker
       raise ArgumentError, 'Allow digit 1..6' if user_input.to_s !~ /^[1-6]{4}$/
       @user_option = user_input.to_s.chars
       @attempts -= 1
-      @result.clear
-      compare
+      explicit_matches
+      implicit_matches
     end
 
     def hint
@@ -48,11 +49,15 @@ module Codebreaker
       4.times { @secret_code << rand(1..6).to_s }
     end
 
-    def compare
-      aid = [@user_option, @secret_code].transpose.reject do |pair|
+    def explicit_matches
+      @result.clear
+      @aid = [@user_option, @secret_code].transpose.reject do |pair|
         @result << '+' if pair.uniq.one?
       end
-      aid.each { |pair| @result << '-' if aid.assoc(pair.last)&[0].clear }
+    end
+
+    def implicit_matches
+      @aid.each { |pair| @result << '-' if @aid.assoc(pair.last)&[0].clear }
       @result
     end
 

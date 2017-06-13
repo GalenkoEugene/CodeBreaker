@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
 # Core for Game CodeBreaker
@@ -76,14 +74,62 @@ module Codebreaker
         expect { compare_action }.to change { game.attempts }.from(10).to(9)
       end
 
-      it 'call compare' do
-        expect(game).to receive(:compare)
+      it 'call explicit_matches' do
+        expect(game).to receive(:explicit_matches)
+        compare_action
+      end
+
+      it 'call implicit_matches' do
+        expect(game).to receive(:implicit_matches)
         compare_action
       end
 
       context 'When user_option doesn`t match the pattern' do
         it 'raise ArgumentError' do
           expect { game.compare_with('foo') }.to raise_error(ArgumentError)
+        end
+      end
+    end
+    describe 'marking algorithm' do
+      let(:result) { game.instance_variable_get(:@result) }
+      user = [%w[1 2 6 3], %w[1 2 4 4], %w[1 2 4 4], %w[6 6 1 4], %w[1 2 4 4]]
+      secr = [%w[1 1 2 3], %w[1 3 4 4], %w[1 2 4 4], %w[1 2 4 4], %w[4 4 2 3]]
+      rez = [
+              [%w[2 1], %w[6 2]],
+              [%w[2 3]],
+              [],
+              [%w[6 1], %w[6 2], %w[1 4]],
+              [%w[1 4], %w[2 4], %w[4 2], %w[4 3]]
+            ]
+      pluses = ['++', '+++', '++++', '+', '']
+      minuses = ['-', '', '', '-', '---']
+
+      describe 'explicit_matches' do
+        user.size.times do |index|
+          it "remove exact matches\n\t#{user[index]}\n\t" \
+                                     "#{secr[index]} => #{rez[index]}" do
+            game.instance_variable_set(:@user_option, user[index])
+            game.instance_variable_set(:@secret_code, secr[index])
+            expect(game.send(:explicit_matches)).to eq rez[index]
+          end
+
+          it "and marking pluses => '#{pluses[index]}'" do
+            game.instance_variable_set(:@user_option, user[index])
+            game.instance_variable_set(:@secret_code, secr[index])
+            game.send(:explicit_matches)
+            expect(result).to eq pluses[index]
+          end
+        end
+      end
+
+      describe 'implicit_matches' do
+        user.size.times do |index|
+          it 'marking minuses' do
+            game.instance_variable_set(:@result, '')
+            game.instance_variable_set(:@aid, rez[index])
+            game.send(:implicit_matches)
+            expect(result).to eq minuses[index]
+          end
         end
       end
     end
