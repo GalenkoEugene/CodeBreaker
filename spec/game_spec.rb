@@ -182,19 +182,6 @@ module Codebreaker
       end
 
       describe '#form_data' do
-        it 'generate score accordind to the remaining attempts' do
-          zero_attempts
-          expect(game.send(:generate_score)).to eq '21'
-        end
-
-        describe '#generate_score' do
-          it 'generate accordind to the remaining attempts' do
-            looser_option
-            zero_attempts
-            expect(game.send(:generate_score)).to eq 0
-          end
-        end
-
         it 'format data before save to file' do
           expect(game.send(:form_data, name)).to be_a Struct
         end

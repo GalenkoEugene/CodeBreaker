@@ -14,9 +14,9 @@ module Codebreaker
       @aid = []
     end
 
-    def start
+    def start(reps = ATTEMPTS)
       generate_secret_code
-      @attempts = ATTEMPTS
+      @attempts = reps.to_i
     end
 
     def compare_with(user_input)
@@ -66,13 +66,8 @@ module Codebreaker
     end
 
     def form_data(name)
-      score = generate_score.to_i
+      score = @attempts
       NST.new(name, score, Time.now.strftime('%F %T'))
-    end
-
-    def generate_score
-      return 0 if @result != '++++' && @attempts.zero?
-      %w[21 34 55 89 144 233 377 610 987 1597].at @attempts
     end
 
     def load_file
