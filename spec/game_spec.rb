@@ -5,7 +5,7 @@ require 'spec_helper'
 # Core for Game CodeBreaker
 module Codebreaker
   RSpec.describe Game do
-    let(:game) { Game.new }
+    subject(:game) { Game.new }
     before (:all) do
       Game.instance_eval { remove_const('PATH_TO_DATA') }
       Game.const_set('PATH_TO_DATA', './test_data.yaml')
@@ -63,7 +63,7 @@ module Codebreaker
 
       #secret = 1243
       user_op = %w[4321 5566 6513 1142 4652 1333 1111 1243 2111 5515 1621]
-      result = '----', '', '+-', '++-', '--', '++', '+', '++++', '--', '-', '+-'
+      result = ['----', '', '+-', '++-', '--', '++', '+', '++++', '--', '-', '+-']
 
       user_op.each_with_index do |user_option, index|
         it 'replies according to the marking algorithm: ' \
