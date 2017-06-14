@@ -51,14 +51,17 @@ module Codebreaker
 
     def explicit_matches
       @result.clear
-      @aid = [@user_option, @secret_code].transpose.reject do |pair|
-        @result << '+' if pair.uniq.one?
-      end
+      @aid = @secret_code.zip(@user_option).reject do |pair|
+        @result += '+' if pair.uniq.one?
+      end.transpose
     end
 
     def implicit_matches
-      @aid.each { |pair| @result << '-' if @aid.assoc(pair.last)&[0].clear }
-      @result
+      return @result if @result == '++++'
+      @aid.first.each do |item|
+        @aid[1].delete_at(@aid[1].index(item)) if @aid[1].include?(item)
+      end
+      @result += ('-' * (@aid[0].size - @aid[1].size))
     end
 
     def chance?

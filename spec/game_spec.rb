@@ -74,11 +74,6 @@ module Codebreaker
         expect { compare_action }.to change { game.attempts }.from(10).to(9)
       end
 
-      it 'call explicit_matches' do
-        expect(game).to receive(:explicit_matches)
-        compare_action
-      end
-
       it 'call implicit_matches' do
         expect(game).to receive(:implicit_matches)
         compare_action
@@ -92,16 +87,16 @@ module Codebreaker
     end
     describe 'marking algorithm' do
       let(:result) { game.instance_variable_get(:@result) }
-      user = [%w[1 2 6 3], %w[1 2 4 4], %w[1 2 4 4], %w[6 6 1 4], %w[1 2 4 4]]
-      secr = [%w[1 1 2 3], %w[1 3 4 4], %w[1 2 4 4], %w[1 2 4 4], %w[4 4 2 3]]
+      secr = [%w[1 2 6 3], %w[1 2 4 4], %w[1 2 4 4], %w[6 6 1 4], %w[1 2 4 4]]
+      user = [%w[1 1 2 3], %w[1 3 4 4], %w[1 2 2 2], %w[1 2 4 4], %w[4 4 2 3]]
       rez = [
-              [%w[2 1], %w[6 2]],
-              [%w[2 3]],
-              [],
-              [%w[6 1], %w[6 2], %w[1 4]],
-              [%w[1 4], %w[2 4], %w[4 2], %w[4 3]]
+              [%w[2 6], %w[1 2]],
+              [%w[2], %w[3]],
+              [%w[4 4], %w[2 2]],
+              [%w[6 6 1], %w[1 2 4]],
+              [%w[1 2 4 4], %w[4 4 2 3]]
             ]
-      pluses = ['++', '+++', '++++', '+', '']
+      pluses = ['++', '+++', '++', '+', '']
       minuses = ['-', '', '', '-', '---']
 
       describe 'explicit_matches' do
