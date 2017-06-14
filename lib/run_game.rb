@@ -16,7 +16,7 @@ module UserInterface
     loop do
       user_option = UI.capture_guess(game)
       p game.hint if %w[h help hint].include? user_option
-      next if user_option !~ /^[1-6]{4}$/
+      next unless game.valid?(user_option)
       p result = game.compare_with(user_option)
       break if game.attempts.zero? || result == '++++'
     end

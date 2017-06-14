@@ -1,8 +1,11 @@
 require 'yaml/store'
+require_relative 'validator'
 
 module Codebreaker
   # CodeBreaker Game
   class Game
+    include Validator
+
     attr_reader :attempts
     ATTEMPTS = 10
     PATH_TO_DATA = './data.yaml'.freeze
@@ -20,7 +23,7 @@ module Codebreaker
     end
 
     def compare_with(user_input)
-      raise ArgumentError, 'Allow digit 1..6' if user_input.to_s !~ /^[1-6]{4}$/
+      raise ArgumentError unless valid?(user_input.to_s)
       @user_option = user_input.to_s.chars
       @attempts -= 1
       explicit_matches
