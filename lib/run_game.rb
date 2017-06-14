@@ -3,7 +3,7 @@
 require_relative 'codebreaker'
 require_relative 'codebreaker/ui'
 # UI for testing CogeBreaker module
-module UI
+module UserInterface
   game = Codebreaker::Game.new
   result = ''
   @name = false

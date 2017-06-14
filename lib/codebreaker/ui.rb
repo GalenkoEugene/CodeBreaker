@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module UI
+module UserInterface
   # Console User Interface
   class UI
     WIDTH = 47
