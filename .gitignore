@@ -7,6 +7,10 @@
 /pkg/
 /spec/reports/
 /tmp/
+/data.yaml
+/lib/data.yaml
+/test_data.yaml
 
 # rspec failure tracking
 .rspec_status
+.rake_tasks~
