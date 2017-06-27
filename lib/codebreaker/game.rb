@@ -37,7 +37,7 @@ module Codebreaker
     def save(name = 'No name')
       raise 'Game is unfinished' if chance?
       @data = load_file
-      @data ? @data << form_data(name) : @data = [form_data(name)]
+      @data << form_data(name)
       File.open(PATH_TO_DATA, 'w') { |file| file.write(@data.to_yaml) }
     end
 
@@ -77,7 +77,7 @@ module Codebreaker
     end
 
     def load_file
-      YAML.load_file(PATH_TO_DATA) if File.exist?(PATH_TO_DATA)
+      File.exist?(PATH_TO_DATA) ? YAML.load_file(PATH_TO_DATA) : []
     end
   end
 end
